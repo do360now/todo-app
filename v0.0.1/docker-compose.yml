@@ -1,0 +1,75 @@
+version: "3.7"
+
+services:
+# To do application  
+  app:
+    image: node:12-alpine
+    command: sh -c "yarn install && yarn run dev"
+    ports:
+      - 3000:3000
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_DB: todos
+
+  mysql1:
+    image: mysql:5.7
+    volumes:
+      - todo-mysql-data:/var/lib/mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: todos
+
+# CI CD Environment
+
+  ansible-master:
+    #user: 1bit
+    image: do360now/ansible-master:0.0.3
+    tty: true
+    volumes:
+      - ansible_volume:/home/ansible
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./volumes/ansible:/home/ansible/challenge
+
+  jenkins:
+    image: do360now/jenkins:0.0.3
+    tty: true
+    ports:
+      - 8080:8080
+      - 5000:5000
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./volumes/jenkins:/home/jenkins
+
+  sonarqube:
+    image: do360now/sonarqube:0.0.3
+    ports:
+      - 9000:9000
+    #user: 1bit
+    tty: true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_temp:/opt/sonarqube/temp
+      - ./volumes/sonarquebe:/home/1bit
+
+  
+      
+volumes:
+  ansible_volume:
+  jenkins_home:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_temp:
+  postgresql:
+  postgresql_data:
+  todo-mysql-data:
+  
+  
