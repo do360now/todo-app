@@ -1,8 +1,20 @@
+#     ____            ____                ________          ____                    
+#    / __ \___ _   __/ __ \____  _____   / ____/ /_  ____ _/ / /__  ____  ____ ____ 
+#   / / / / _ \ | / / / / / __ \/ ___/  / /   / __ \/ __ `/ / / _ \/ __ \/ __ `/ _ \
+#  / /_/ /  __/ |/ / /_/ / /_/ (__  )  / /___/ / / / /_/ / / /  __/ / / / /_/ /  __/
+# /_____/\___/|___/\____/ .___/____/   \____/_/ /_/\__,_/_/_/\___/_/ /_/\__, /\___/ 
+#                      /_/                                             /____/       
+
+####################################
+#    Capgemini -  DevOps Challenge      #
+####################################
+
+
 version: "3.7"
 
 services:
 # To do application  
-  app:
+  todo-app:
     image: node:12-alpine
     command: sh -c "yarn install && yarn run dev"
     ports:
@@ -16,7 +28,7 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_DB: todos
 
-  mysql1:
+  mysql:
     image: mysql:5.7
     volumes:
       - todo-mysql-data:/var/lib/mysql
@@ -24,7 +36,7 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todos
 
-# CI CD Environment
+# CI/CD Environment
 
   ansible-master:
     #user: 1bit
@@ -36,7 +48,7 @@ services:
       - ./volumes/ansible:/home/ansible/challenge
 
   jenkins:
-    image: do360now/jenkins:0.0.3
+    image: jenkins/jenkins:lts
     tty: true
     ports:
       - 8080:8080

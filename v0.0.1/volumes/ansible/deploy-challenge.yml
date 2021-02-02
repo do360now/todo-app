@@ -15,6 +15,7 @@
   hosts: jenkins
   
   become: true
-  become_user: 1bit  
+    
   roles:
+    - ansible-role-java
     - ansible-role-jenkins
